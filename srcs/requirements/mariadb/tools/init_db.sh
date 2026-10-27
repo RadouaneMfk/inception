@@ -11,10 +11,6 @@ if [ ! -f "/var/lib/mysql/.done" ]; then
 
     mysqld_safe --data=/var/lib/mysql &
 
-    until mysqladmin ping >/dev/null 2>&1; do
-        sleep 1
-    done
-
     mariadb -u root <<-EOF
         CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
         CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';

@@ -12,12 +12,31 @@ services:
     networks:
       - inception
     restart: on-failure
+  
+  wordpress:
+    image: wordpress:1.0
+    build: ./requirements/wordpress
+    container_name: wordpress
+    env_file: .env
+    depends_on:
+      - mariadb
+    secrets:
+      - credentials
+      - db_password
+      - db_root_password
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception
+    restart: on-failure
 
 secrets:
   db_password:
     file: ../secrets/db_password.txt
   db_root_password:
     file: ../secrets/db_root_password.txt
+  credentials:
+    file: ../secrets/credentials.txt
 
 volumes:
   mariadb_data:
@@ -26,6 +45,12 @@ volumes:
       type: none
       o: bind
       device: /home/rmouafik/data/mariadb
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/rmouafik/data/wordpress
 
 networks:
   inception:
