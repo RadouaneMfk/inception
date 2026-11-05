@@ -29,6 +29,21 @@ services:
     networks:
       - inception
     restart: on-failure
+  
+  nginx:
+    image: nginx:1.0
+    build: ./requirements/nginx
+    ports:
+      - "443:443"
+    container_name: nginx
+    env_file: .env
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress_data:/var/www/html:ro
+    networks:
+      - inception
+    restart: on-failure
 
 secrets:
   db_password:
