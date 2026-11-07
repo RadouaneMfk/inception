@@ -7,7 +7,7 @@ WP_USER_PASSWORD=$(grep '^WP_USER_PASSWORD=' ../../run/secrets/credentials | cut
 
 cd /var/www/html
 
-# Wait for MariaDB (bounded: 30 tries, then fail)
+
 tries=0
 until mariadb-admin ping -h mariadb -u "$MYSQL_USER" -p"$DB_PASSWORD" --silent; do
     tries=$((tries + 1))
@@ -18,7 +18,7 @@ until mariadb-admin ping -h mariadb -u "$MYSQL_USER" -p"$DB_PASSWORD" --silent; 
     sleep 2
 done
 
-# Each step is skipped if already done
+
 if [ ! -f wp-load.php ]; then
     wp core download --allow-root
 fi
@@ -48,3 +48,4 @@ fi
 chown -R www-data:www-data /var/www/html
 
 exec php-fpm8.2 -F
+

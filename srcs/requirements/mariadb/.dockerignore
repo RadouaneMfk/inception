@@ -1,0 +1,4 @@
+*
+
+!./conf/mariadb.cnf
+!./tools/init_db.sh

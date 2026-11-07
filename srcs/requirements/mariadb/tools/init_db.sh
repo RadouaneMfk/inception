@@ -9,7 +9,14 @@ if [ ! -f "/var/lib/mysql/.done" ]; then
     echo "Initializing Mariadb data directory..."
     mariadb-install-db --user=mysql --datadir=/var/lib/mysql > /dev/null
 
-    mysqld_safe --data=/var/lib/mysql &
+    mysqld_safe --datadir=/var/lib/mysql &
+
+    for i in $(seq 1 30); do
+        if mariadb-admin ping --silent; then
+            break
+        fi
+        sleep 1
+    done
 
     mariadb -u root <<-EOF
         CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
@@ -25,4 +32,4 @@ EOF
 fi
 
 echo "Starting mariadb..."
-exec mysqld_safe --datadir=/var/lib/mysql
+exec mysqld_safe --user=mysql --datadir=/var/lib/mysql
